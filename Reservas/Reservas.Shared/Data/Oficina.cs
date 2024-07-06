@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
+
 namespace Reservas.Shared.Data
 {
     public class Oficina
@@ -24,5 +25,7 @@ namespace Reservas.Shared.Data
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         [MaxLength(100, ErrorMessage = "El campo {0} debe tener máximo {1} caractéres.")]
         public string Ubicacion { get; set; } = null!;
+
+       
     }
 }
