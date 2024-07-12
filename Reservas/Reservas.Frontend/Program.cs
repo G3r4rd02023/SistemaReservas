@@ -1,3 +1,5 @@
+using Reservas.Frontend.Services;
+
 namespace Reservas.Frontend
 {
     public class Program
@@ -9,6 +11,7 @@ namespace Reservas.Frontend
             // Add services to the container.
             builder.Services.AddControllersWithViews();
             builder.Services.AddHttpClient();
+            builder.Services.AddScoped<IServicioLista, ServicioLista>(); 
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

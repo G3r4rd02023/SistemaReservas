@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Reservas.Shared.Data;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Reservas.Frontend.Models
 {
-    public class EdificiosViewModel
+    public class OficinaViewModel : Oficina
     {
-        public int EdificioId { get; set; }
+        [NotMapped]
         public IEnumerable<SelectListItem>? Edificios { get; set; }
     }
 }

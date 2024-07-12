@@ -2,6 +2,8 @@
 using System.ComponentModel.DataAnnotations.Schema;
 
 
+
+
 namespace Reservas.Shared.Data
 {
     public class Oficina
@@ -26,6 +28,7 @@ namespace Reservas.Shared.Data
         [MaxLength(100, ErrorMessage = "El campo {0} debe tener máximo {1} caractéres.")]
         public string Ubicacion { get; set; } = null!;
 
-       
+        
+
     }
 }

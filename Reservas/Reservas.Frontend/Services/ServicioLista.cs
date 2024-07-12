@@ -24,14 +24,21 @@ namespace Reservas.Frontend.Services
                 var content = await response.Content.ReadAsStringAsync();
                 var edificios = JsonConvert.DeserializeObject<IEnumerable<Edificio>>(content);
 
-                return edificios!.Select(c => new SelectListItem
+                var listaEdificios = edificios!.Select(e => new SelectListItem
                 {
-                    Value = c.Id.ToString(),
-                    Text = c.Nombre
+                    Value = e.Id.ToString(),
+                    Text = e.Nombre
                 }).ToList();
+
+                listaEdificios.Insert(0, new SelectListItem
+                {
+                    Value = "",
+                    Text = "Seleccione un Edificio"
+                });
+                return listaEdificios;
             }
 
-            return new List<SelectListItem>();
+            return [];
         }
     }
 
