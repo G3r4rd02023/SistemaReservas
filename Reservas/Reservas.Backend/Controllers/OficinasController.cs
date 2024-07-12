@@ -19,7 +19,7 @@ namespace Reservas.Backend.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAsync()
         {
-            return Ok(await _context.Oficinas.ToListAsync());
+            return Ok(await _context.Oficinas.Include(x => x.Edificio).ToListAsync());
         }
 
         [HttpPost]

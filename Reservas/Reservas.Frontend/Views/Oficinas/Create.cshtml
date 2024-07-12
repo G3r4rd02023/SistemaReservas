@@ -1,0 +1,38 @@
+﻿@model Reservas.Frontend.Models.EdificioViewModel
+@{
+    ViewData["Title"] = "Create";
+    Layout = null;
+}
+
+<div class=" col-md-12">
+    <div class=" card">
+        <div class=" card-header text-center">
+            <h5> Crear Oficina</h5>
+        </div>
+        <div class=" card-body text-center">
+            <form asp-action="Create" method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+              
+                <div class="form-group">
+                    <label></label>
+                    <select asp-for="EdificioId" asp-items="Model.Edificios" class="form-control"></select>
+                    <span asp-validation-for="EdificioId" class="text-danger"></span>
+                </div>              
+                <div class=" card-footer ">
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-save"></i> Guardar</button>
+                        <button type="button" class="btn btn-sm btn-primary" data-bs-dismiss="modal"><i class="fa fa-ban"></i> Cancelar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
