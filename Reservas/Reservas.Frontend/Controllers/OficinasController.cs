@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using Reservas.Shared.Data;
 using Reservas.Frontend.Models;
 using Reservas.Frontend.Services;
+using System.Text;
 
 namespace Reservas.Frontend.Controllers
 {
@@ -10,13 +11,13 @@ namespace Reservas.Frontend.Controllers
     {
         
         private readonly HttpClient _httpClient;
-        private readonly IServicioLista? _lista;
+        private readonly IServicioLista _lista;
 
         public OficinasController(IHttpClientFactory httpClientFactory, IServicioLista lista)
         {
             _httpClient = httpClientFactory.CreateClient();
             _httpClient.BaseAddress = new Uri("https://localhost:7009/");
-            lista = _lista!;
+            _lista = lista;
         }
 
         public async Task<IActionResult> Index()
@@ -33,10 +34,93 @@ namespace Reservas.Frontend.Controllers
 
         public async Task<IActionResult> Create()
         {
-            var model = new EdificioViewModel();
-            model.Edificios = await _lista!.GetListaEdificios();
+            var edificios = await _lista!.GetListaEdificios();
+            if(edificios == null)
+            {
+                ModelState.AddModelError(string.Empty, "Edificio no encontrado");
+            }
 
-            return View(model);
+            OficinaViewModel oficina = new()
+            {
+                Edificios = edificios,
+            };
+
+            return View(oficina);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(OficinaViewModel oficina)
+        {
+            if (ModelState.IsValid)
+            {
+                var json = JsonConvert.SerializeObject(oficina);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                var response = await _httpClient.PostAsync("/api/Oficinas", content);
+                if (response.IsSuccessStatusCode)
+                {
+                    TempData["AlertMessage"] = "Oficina creada Exitosamente";
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "Ocurrio un error al crear la oficina";
+                }
+            }
+            oficina.Edificios = await _lista.GetListaEdificios();
+            return View(oficina);
+        }
+
+        public async Task<IActionResult> Edit(int id)
+        {
+            var response = await _httpClient.GetAsync($"/api/Oficinas/{id}");
+            if (!response.IsSuccessStatusCode) 
+            {
+                TempData["ErrorMessage"] = "Error al obtener oficina";
+                return RedirectToAction("Index");
+            }
+            var jsonString = await response.Content.ReadAsStringAsync();
+            var oficina = JsonConvert.DeserializeObject<OficinaViewModel>(jsonString);
+            oficina!.Edificios = await _lista.GetListaEdificios();
+            return View(oficina);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(int id, OficinaViewModel oficina)
+        {
+            if (ModelState.IsValid)
+            {
+                var json = JsonConvert.SerializeObject(oficina);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                var response = await _httpClient.PutAsync($"/api/Oficinas/{id}", content);
+                if (response.IsSuccessStatusCode)
+                {
+                    TempData["AlertMessage"] = "Oficina actualizada Exitosamente";
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "Ocurrio un error al actualizar la oficina";
+                    return RedirectToAction("Index");
+                }
+            }
+            oficina.Edificios = await _lista.GetListaEdificios();
+            return View(oficina);
+        }
+
+        public async Task<IActionResult> Delete(int id)
+        {
+            var response = await _httpClient.DeleteAsync($"/api/Oficinas/{id}");
+            if (response.IsSuccessStatusCode)
+            {
+                TempData["AlertMessage"] = "Oficina eliminada Exitosamente";
+                return RedirectToAction("Index");
+            }
+            else 
+            {
+                TempData["ErrorMessage"] = "Error al eliminar la oficina";
+                return RedirectToAction("Index");
+            }           
+        }
+
     }
 }

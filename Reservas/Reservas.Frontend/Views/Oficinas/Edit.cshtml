@@ -1,21 +1,21 @@
 ﻿@model Reservas.Frontend.Models.OficinaViewModel
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Edit";
     Layout = null;
 }
 
 <div class=" col-md-12">
     <div class=" card">
         <div class=" card-header text-center">
-            <h5> Crear Oficina</h5>
+            <h5> Editar Oficina</h5>
         </div>
         <div class=" card-body text-center">
-            <form asp-action="Create" method="post" enctype="multipart/form-data">
+            <form asp-action="Edit" method="post" enctype="multipart/form-data">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
+                <input asp-for="Id" type="hidden"/>
                 <div class="form-group">
                     <label></label>
-                    <input asp-for="Nombre"  class="form-control" placeholder="Nombre" />
+                    <input asp-for="Nombre" class="form-control" placeholder="Nombre" />
                     <span asp-validation-for="Nombre" class="text-danger"></span>
                 </div>
 
@@ -42,7 +42,7 @@
                     <label></label>
                     <select asp-for="EdificioId" asp-items="Model.Edificios" class="form-control"></select>
                     <span asp-validation-for="EdificioId" class="text-danger"></span>
-                </div>              
+                </div>
                 <div class=" card-footer ">
                     <div class="form-group">
                         <button type="submit" class="btn btn-sm btn-success"><i class="oi oi-check"></i> Guardar</button>
@@ -53,11 +53,5 @@
         </div>
     </div>
 </div>
-
-
-
-
-
-
 
 
