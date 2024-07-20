@@ -5,7 +5,28 @@
 
 @section Estilos{
     <link href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" rel="stylesheet" />
+   @*  referencia para mostrar los botones de pdf, excel e imprimir *@
+    <link href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" rel=" stylesheet" />
 }
+
+@* seccion de estilos donde definimos los botones*@
+<style>
+    .btn-exportar-excel {
+        background-color: #198754 !important;
+        color: white !important;
+    }
+
+    .btn-exportar-pdf {
+        background-color: #dc3545 !important;
+        color: white !important;
+    }
+
+    .btn-exportar-print {
+        background-color: #00a7c9 !important;
+        color: white !important;
+    }
+</style>
+
 
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -76,6 +97,8 @@
                             <td>@Html.DisplayFor(modelItem => item.Edificio!.Nombre)</td>
                             <td>@Html.DisplayFor(modelItem => item.Ubicacion)</td>
                             <td>
+                                <a onclick="showInPopup('@Url.Action("Details", "Oficinas", new { id = item.Id }, Context.Request.Scheme)' ,
+                    '')" class="btn btn-outline-info btn-sm"><i class="oi oi-list"></i> </a>
                                 <a onclick="showInPopup('@Url.Action("Edit", "Oficinas", new { id = item.Id }, Context.Request.Scheme)' ,
                     '')" class="btn btn-outline-warning btn-sm"><i class="oi oi-pencil"></i> </a>
                                 <button data-id="@item.Id" class="btn btn-outline-danger btn-sm deleteItem" data-bs-toggle="modal" data-bs-target="#deleteDialog">
@@ -99,6 +122,13 @@
     <script src="~/js/showmodal.js"></script>
 
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    @*agregar referencias para los botones*@
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
 
     <script>
         $(document).ready(function () {
@@ -107,6 +137,44 @@
                     "language": {
                         url: "https://cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json"
                     },
+                     dom: "Bfrtip",
+                    buttons: [
+                        //excel
+                        {
+                            extend: 'excelHtml5',
+                            text: 'Exportar Excel',
+                            filename: 'Reporte Oficinas',
+                            title: 'Reporte Oficinas',
+                            exportOptions: {
+                                columns: [1, 2, 3, 4]
+                            },
+                            className: 'btn-exportar-excel',
+
+                        },
+                        //pdf
+                        {
+                            extend: 'pdfHtml5',
+                            text: 'Exportar PDF',
+                            filename: 'Reporte Oficinas',
+                            title: 'Reporte de oficinas',
+                            exportOptions: {
+                                columns: [1, 2, 3, 4]
+                            },
+                            className: 'btn-exportar-pdf',
+                        },
+                        //print
+                        {
+                            extend: 'print',
+                            title: 'Reporte de oficinas',
+                            exportOptions: {
+                                columns: [1, 2, 3, 4]
+                            },
+                            className: 'btn-exportar-print'
+
+                        },
+                        //numero de paginas
+                        'pageLength'
+                    ]
                 });
         });
     </script>

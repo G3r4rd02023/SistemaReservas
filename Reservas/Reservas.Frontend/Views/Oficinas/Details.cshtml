@@ -1,0 +1,43 @@
+﻿@model Reservas.Shared.Data.Oficina
+@{
+    ViewData["Title"] = "Details";
+    Layout = null;
+}
+
+
+
+<div class=" col-md-12">
+    <div class = "card" id="detalles">
+        <div class="card-header">
+            <h5>Detalle Oficina</h5>
+        </div>
+        <div class=" card-body text-center text-danger">
+            <dl class="row">
+                <dt class=" col-sm-6">
+                    Nombre
+                </dt>
+                <dd class="col-sm-6">
+                    @Html.DisplayFor(model => model.Nombre)
+                </dd>
+                <dt class=" col-sm-6">
+                    Descripcion
+                </dt>
+                <dd class="col-sm-6">
+                    @Html.DisplayFor(model => model.Descripcion)
+                </dd>
+                <dt class=" col-sm-6">
+                    Precio
+                </dt>
+                <dd class="col-sm-6">
+                    @Html.DisplayFor(model => model.Precio)
+                </dd>
+            </dl>
+        </div>
+        <div class ="card-footer">
+            <button type="button" class="btn btn-sm btn-primary mb-2" data-bs-dismiss="modal"><i class=" oi oi-ban"></i>Volver</button>
+        </div>
+    </div>
+</div>
+
+
+

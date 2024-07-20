@@ -122,5 +122,19 @@ namespace Reservas.Frontend.Controllers
             }           
         }
 
+        public async Task<IActionResult> Details(int id)
+        {
+            var response = await _httpClient.GetAsync($"/api/Oficinas/{id}");
+            if (!response.IsSuccessStatusCode)
+            {
+                TempData["ErrorMessage"] = "Error al obtener oficina";
+                return RedirectToAction("Index");
+            }
+            var jsonString = await response.Content.ReadAsStringAsync();
+            var oficina = JsonConvert.DeserializeObject<OficinaViewModel>(jsonString);
+           
+            return View(oficina);
+        }
+
     }
 }
