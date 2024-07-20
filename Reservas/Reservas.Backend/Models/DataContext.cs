@@ -9,8 +9,10 @@ namespace Reservas.Backend.Models
         {
         }
 
+        public DbSet<DatosPersonales> DatosPersonales { get; set; }
         public DbSet<Edificio> Edificios { get; set; }
-
         public DbSet<Oficina> Oficinas { get; set; }
+        public DbSet<Rol> Roles { get; set; }
+        public DbSet<Usuario> Usuarios { get;set; }
     }
 }

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Reservas.Frontend.Services;
 
 namespace Reservas.Frontend
@@ -11,7 +12,14 @@ namespace Reservas.Frontend
             // Add services to the container.
             builder.Services.AddControllersWithViews();
             builder.Services.AddHttpClient();
-            builder.Services.AddScoped<IServicioLista, ServicioLista>(); 
+            builder.Services.AddScoped<IServicioLista, ServicioLista>();
+            builder.Services.AddScoped<IServicioUsuario, ServicioUsuario>();
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddCookie(options =>
+             {
+                 options.LoginPath = "/Login/IniciarSesion";
+                 options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
+            });
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -26,12 +34,12 @@ namespace Reservas.Frontend
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Login}/{action=IniciarSesion}/{id?}");
 
             app.Run();
         }
