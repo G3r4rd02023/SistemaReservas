@@ -4,6 +4,8 @@ using Reservas.Shared.Data;
 using Reservas.Frontend.Models;
 using Reservas.Frontend.Services;
 using System.Text;
+using Rotativa.AspNetCore;
+using System.Reflection;
 
 namespace Reservas.Frontend.Controllers
 {
@@ -134,6 +136,25 @@ namespace Reservas.Frontend.Controllers
             var oficina = JsonConvert.DeserializeObject<OficinaViewModel>(jsonString);
            
             return View(oficina);
+        }
+
+        public async Task<IActionResult> GenerarPdf(int id)
+        {
+            var response = await _httpClient.GetAsync($"/api/Oficinas/{id}");
+            if (!response.IsSuccessStatusCode)
+            {
+                TempData["ErrorMessage"] = "Error al obtener oficina";
+                return RedirectToAction("Index");
+            }
+            var jsonString = await response.Content.ReadAsStringAsync();
+            var oficina = JsonConvert.DeserializeObject<OficinaViewModel>(jsonString);
+
+            return new ViewAsPdf("GenerarPdf", oficina)
+            {
+                FileName = $"Venta {oficina!.Id}.pdf",
+                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Portrait,
+                PageSize = Rotativa.AspNetCore.Options.Size.A4
+            };
         }
 
     }

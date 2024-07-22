@@ -35,6 +35,10 @@
         </div>
         <div class ="card-footer">
             <button type="button" class="btn btn-sm btn-primary mb-2" data-bs-dismiss="modal"><i class=" oi oi-ban"></i>Volver</button>
+            <a asp-controller="Oficinas"
+               asp-action="GenerarPdf"
+               asp-route-id="@Model.Id"
+               class="btn btn-sm btn-info text-white mb-2">Generar Pdf</a>
         </div>
     </div>
 </div>
