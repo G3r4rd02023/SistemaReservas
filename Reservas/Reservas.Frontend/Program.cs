@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Reservas.Frontend.Services;
 
 
@@ -13,6 +14,12 @@ namespace Reservas.Frontend
             builder.Services.AddControllersWithViews();
             builder.Services.AddHttpClient(); // servicio que nos permite conectarnos al backend y hacer solicitudes
             builder.Services.AddScoped<IServicioLista, ServicioLista>();
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+           .AddCookie(options =>
+           {
+               options.LoginPath = "/Login/IniciarSesion";
+               options.ExpireTimeSpan = TimeSpan.FromMinutes(10);
+           });
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -29,10 +36,10 @@ namespace Reservas.Frontend
             app.UseRouting();
 
             app.UseAuthorization();
-
+            app.UseAuthentication();
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Login}/{action=IniciarSesion}/{id?}");
 
             IWebHostEnvironment env = app.Environment;
             Rotativa.AspNetCore.RotativaConfiguration.Setup(env.WebRootPath, "../Rotativa/Windows");
