@@ -55,5 +55,41 @@ namespace Reservas.Frontend.Controllers
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("IniciarSesion", "Login");
         }
+
+        public IActionResult Registro()
+        {
+
+            var model = new RegistroViewModel()
+            {
+                RolId = 2,
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Registro(RegistroViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                model.RolId = 2;
+                var json = JsonConvert.SerializeObject(model);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await _httpClient.PostAsync("/api/Login/Registro", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    TempData["Message"] = "Usuario registrado exitosamente!!!";
+                    return RedirectToAction("IniciarSesion", "Login");
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Error, no se pudo crear el usuario");
+                }
+            }
+            return View(model);
+        }
+
     }
 }

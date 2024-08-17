@@ -4,6 +4,8 @@ namespace Reservas.Shared.Models
 {
     public class RegistroViewModel
     {
+        
+        public int Id { get; set; }
         //clase usuario
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         [MaxLength(100, ErrorMessage = "El campo {0} debe tener máximo {1} caractéres.")]
@@ -43,7 +45,7 @@ namespace Reservas.Shared.Models
         public string Direccion { get; set; } = null!;
 
         public DateTime FechaRegistro { get; set; }
-
+        public string NombreCompleto => $"{PrimerNombre} {PrimerApellido}";
         public int RolId { get; set; }
         public int UsuarioId { get; set; }
 

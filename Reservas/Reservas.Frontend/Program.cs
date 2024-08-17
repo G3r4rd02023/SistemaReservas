@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc;
 using Reservas.Frontend.Services;
 
 
@@ -20,6 +21,18 @@ namespace Reservas.Frontend
                options.LoginPath = "/Login/IniciarSesion";
                options.ExpireTimeSpan = TimeSpan.FromMinutes(10);
            });
+
+            builder.Services.AddControllersWithViews(options =>
+            {
+                options.Filters.Add(
+                    new ResponseCacheAttribute
+                    {
+                        NoStore = true,
+                        Location = ResponseCacheLocation.None,
+                    }
+                   );
+            });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

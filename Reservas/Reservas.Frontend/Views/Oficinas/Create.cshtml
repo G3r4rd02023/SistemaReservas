@@ -1,7 +1,7 @@
 ﻿@model Reservas.Frontend.Models.OficinaViewModel
 @{
     ViewData["Title"] = "Create";
-    Layout = null;
+    Layout = "~/Views/Shared/ModalLayout.cshtml";
 }
 
 <div class=" col-md-12">
@@ -54,7 +54,9 @@
     </div>
 </div>
 
-
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
 
 
 

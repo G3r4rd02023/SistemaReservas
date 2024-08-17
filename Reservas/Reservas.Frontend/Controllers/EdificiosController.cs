@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Reservas.Frontend.Models;
 using Reservas.Shared.Data;
@@ -6,6 +7,7 @@ using System.Text;
 
 namespace Reservas.Frontend.Controllers
 {
+    [Authorize]
     public class EdificiosController : Controller
     {
         private readonly HttpClient _httpClient;
