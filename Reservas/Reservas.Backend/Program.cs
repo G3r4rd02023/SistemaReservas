@@ -1,6 +1,8 @@
-
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Reservas.Backend.Models;
+using System.Text;
 
 namespace Reservas.Backend
 {
@@ -19,6 +21,36 @@ namespace Reservas.Backend
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            var key = builder.Configuration["Jwt:key"];
+
+            builder.Services.AddAuthentication(config =>
+            {
+                config.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                config.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(config =>
+            {
+                config.RequireHttpsMetadata = false;
+                config.SaveToken = true;
+                config.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.Zero,
+                    IssuerSigningKey = new SymmetricSecurityKey
+                    (Encoding.UTF8.GetBytes(key!))
+                };
+            });
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("NewPolicy", app =>
+                {
+                    app.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+                });
+            });
+
             var app = builder.Build();
 
             SeedData(app);
@@ -32,7 +64,6 @@ namespace Reservas.Backend
                 }
             }
 
-
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
@@ -41,9 +72,9 @@ namespace Reservas.Backend
             }
 
             app.UseHttpsRedirection();
-
+            app.UseCors("NewPolicy");
+            app.UseAuthentication();
             app.UseAuthorization();
-
 
             app.MapControllers();
 

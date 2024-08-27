@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Reservas.Frontend.Services;
 using Reservas.Shared.Models;
 using System.Security.Claims;
 using System.Text;
@@ -11,11 +12,13 @@ namespace Reservas.Frontend.Controllers
     public class LoginController : Controller
     {
         private readonly HttpClient _httpClient;
+        private readonly IServicioUsuario _usuario;
 
-        public LoginController(IHttpClientFactory httpClientFactory)
+        public LoginController(IHttpClientFactory httpClientFactory, IServicioUsuario usuario)
         {
             _httpClient = httpClientFactory.CreateClient();
             _httpClient.BaseAddress = new Uri("https://localhost:7009/");
+            _usuario = usuario;
         }
 
         public IActionResult IniciarSesion()
@@ -31,15 +34,21 @@ namespace Reservas.Frontend.Controllers
                 var json = JsonConvert.SerializeObject(model);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
                 var response = await _httpClient.PostAsync("/api/Login/IniciarSesion", content);
+                var user = await _usuario.GetUsuarioByEmail(model.Email);
+                var rol = await _usuario.GetRolById(user.RolId);
+
                 if (response.IsSuccessStatusCode)
                 {
                     var claims = new List<Claim>
                     {
                         new Claim(ClaimTypes.Name, model.Email),
+                        new Claim(ClaimTypes.Role, rol)
                     };
 
                     var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+                    var apiService = new ApiService();
+                    await apiService.Autenticar(user);
                     return RedirectToAction("Index", "Home");
                 }
                 else
@@ -58,7 +67,6 @@ namespace Reservas.Frontend.Controllers
 
         public IActionResult Registro()
         {
-
             var model = new RegistroViewModel()
             {
                 RolId = 2,
@@ -90,6 +98,5 @@ namespace Reservas.Frontend.Controllers
             }
             return View(model);
         }
-
     }
 }

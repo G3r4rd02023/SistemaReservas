@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Reservas.Backend.Models;
@@ -7,13 +7,12 @@ using Reservas.Shared.Data;
 namespace Reservas.Backend.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize]
     [ApiController]
-    public class EdificiosController : ControllerBase
+    public class RolesController : ControllerBase
     {
         private readonly DataContext _context;
 
-        public EdificiosController(DataContext context)
+        public RolesController(DataContext context)
         {
             _context = context;
         }
@@ -21,13 +20,13 @@ namespace Reservas.Backend.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAsync()
         {
-            return Ok(await _context.Edificios.ToListAsync());
+            return Ok(await _context.Roles.ToListAsync());
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostAsync(Edificio edificio)
+        public async Task<IActionResult> PostAsync(Rol rol)
         {
-            _context.Add(edificio);
+            _context.Add(rol);
             await _context.SaveChangesAsync();
             return Ok();
         }
@@ -35,24 +34,24 @@ namespace Reservas.Backend.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAsync(int id)
         {
-            var edificio = await _context.Edificios
-                .SingleOrDefaultAsync(p => p.Id == id);
-            if (edificio == null)
+            var rol = await _context.Roles
+                .SingleOrDefaultAsync(c => c.Id == id);
+            if (rol == null)
             {
                 return NotFound();
             }
-            return Ok(edificio);
+            return Ok(rol);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAsync(int id, [FromBody] Edificio edificio)
+        public async Task<IActionResult> PutAsync(int id, [FromBody] Rol rol)
         {
-            if (id != edificio.Id)
+            if (id != rol.Id)
             {
                 return BadRequest();
             }
 
-            _context.Update(edificio);
+            _context.Update(rol);
             await _context.SaveChangesAsync();
             return NoContent();
         }
@@ -60,12 +59,12 @@ namespace Reservas.Backend.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(int id)
         {
-            var edificio = await _context.Edificios.FindAsync(id);
-            if (edificio == null)
+            var rol = await _context.Roles.FindAsync(id);
+            if (rol == null)
             {
                 return NotFound();
             }
-            _context.Remove(edificio);
+            _context.Remove(rol);
             await _context.SaveChangesAsync();
             return NoContent();
         }

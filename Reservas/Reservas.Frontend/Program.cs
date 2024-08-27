@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Reservas.Frontend.Services;
 
-
 namespace Reservas.Frontend
 {
     public class Program
@@ -15,6 +14,7 @@ namespace Reservas.Frontend
             builder.Services.AddControllersWithViews();
             builder.Services.AddHttpClient(); // servicio que nos permite conectarnos al backend y hacer solicitudes
             builder.Services.AddScoped<IServicioLista, ServicioLista>();
+            builder.Services.AddScoped<IServicioUsuario, ServicioUsuario>();
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
            .AddCookie(options =>
            {
@@ -33,6 +33,13 @@ namespace Reservas.Frontend
                    );
             });
 
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30); // Configura el tiempo de inactividad de la sesión
+                options.Cookie.HttpOnly = true; // Seguridad adicional
+                options.Cookie.IsEssential = true; // La cookie de sesión es esencial para la funcionalidad
+            });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -47,7 +54,7 @@ namespace Reservas.Frontend
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            app.UseSession();
             app.UseAuthorization();
             app.UseAuthentication();
             app.MapControllerRoute(

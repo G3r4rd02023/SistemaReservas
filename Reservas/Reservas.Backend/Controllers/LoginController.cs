@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Common;
 using Reservas.Backend.Models;
 using Reservas.Shared.Data;
 using Reservas.Shared.Models;
@@ -7,6 +9,7 @@ using Reservas.Shared.Models;
 namespace Reservas.Backend.Controllers
 {
     [Route("api/[controller]")]
+    [AllowAnonymous]
     [ApiController]
     public class LoginController : ControllerBase
     {
@@ -32,11 +35,11 @@ namespace Reservas.Backend.Controllers
             {
                 if (BCrypt.Net.BCrypt.Verify(login.Contraseña, usuario.Contrasena))
                 {
-                    return Ok(new { Message = "Inicio de sesión exitoso." });
+                    return Ok(new { Message = "Inicio de sesión exitoso.", isSuccess = true });
                 }
             }
 
-            return Unauthorized(new { Message = "Inicio de sesión fallido. Usuario o contraseña incorrectos." });
+            return Unauthorized(new { Message = "Inicio de sesión fallido. Usuario o contraseña incorrectos.", isSuccess = false, token = "" });
         }
 
         [HttpPost("Registro")]

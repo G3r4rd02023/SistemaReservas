@@ -1,33 +1,50 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using Reservas.Frontend.Models;
+using Reservas.Frontend.Services;
 using Reservas.Shared.Data;
+using System.Net.Http.Headers;
+using System.Security.Claims;
 using System.Text;
 
 namespace Reservas.Frontend.Controllers
 {
-    [Authorize]
     public class EdificiosController : Controller
     {
         private readonly HttpClient _httpClient;
+        private readonly IServicioUsuario _usuario;
 
-        public EdificiosController(IHttpClientFactory httpClientFactory)
+        public EdificiosController(IHttpClientFactory httpClientFactory, IServicioUsuario usuario)
         {
             _httpClient = httpClientFactory.CreateClient();
             _httpClient.BaseAddress = new Uri("https://localhost:7009/");
-
+            _usuario = usuario;
         }
 
         public async Task<IActionResult> Index()
         {
+            var user = await _usuario.GetUsuarioByEmail(User.Identity!.Name!);
+            var apiService = new ApiService();
+            var token = await apiService.Autenticar(user);
+            // Realiza la solicitud HTTP al endpoint protegido
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var response = await _httpClient.GetAsync("/api/Edificios");
+
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
                 var edificios = JsonConvert.DeserializeObject<IEnumerable<Edificio>>(content);
                 return View("Index", edificios);
             }
+
+            // Si la solicitud falla (por ejemplo, 401 Unauthorized), maneja el error
+            if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            {
+                // Podrías redirigir al usuario a la página de login o mostrar un mensaje de error
+                return RedirectToAction("IniciarSesion", "Login");
+            }
+
+            // En caso de otros errores, podrías manejar la excepción o retornar una vista vacía
             return View(new List<Edificio>());
         }
 
@@ -54,7 +71,7 @@ namespace Reservas.Frontend.Controllers
                     TempData["ErrorMessage"] = "Ocurrio un error al crear el edificio";
                 }
             }
-           
+
             return View(edificio);
         }
 
@@ -68,7 +85,7 @@ namespace Reservas.Frontend.Controllers
             }
             var jsonString = await response.Content.ReadAsStringAsync();
             var edificio = JsonConvert.DeserializeObject<Edificio>(jsonString);
-            
+
             return View(edificio);
         }
 
@@ -91,7 +108,7 @@ namespace Reservas.Frontend.Controllers
                     return RedirectToAction("Index");
                 }
             }
-            
+
             return View(edificio);
         }
 
