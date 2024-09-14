@@ -19,10 +19,17 @@ namespace Reservas.Backend.Models
 
         public DbSet<Rol> Roles { get; set; }
 
+        public DbSet<Reserva> Reservas { get; set; }
+
+        public DbSet<Servicio> Servicios { get; set; }
+
+        public DbSet<Transaccion> Transacciones { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Usuario>().HasIndex(c => c.Email).IsUnique();
+            modelBuilder.Entity<Servicio>().HasIndex(r => r.Nombre).IsUnique();
         }
     }
 }
