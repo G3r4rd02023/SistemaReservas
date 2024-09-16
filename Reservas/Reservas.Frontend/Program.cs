@@ -15,6 +15,7 @@ namespace Reservas.Frontend
             builder.Services.AddHttpClient(); // servicio que nos permite conectarnos al backend y hacer solicitudes
             builder.Services.AddScoped<IServicioLista, ServicioLista>();
             builder.Services.AddScoped<IServicioUsuario, ServicioUsuario>();
+            builder.Services.AddScoped<IServicioBitacora, ServicioBitacora>();
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
            .AddCookie(options =>
            {

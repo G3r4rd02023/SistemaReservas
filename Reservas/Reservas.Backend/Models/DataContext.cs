@@ -9,6 +9,8 @@ namespace Reservas.Backend.Models
         {
         }
 
+        public DbSet<Bitacora> Bitacora { get; set; }
+
         public DbSet<Edificio> Edificios { get; set; }
 
         public DbSet<Oficina> Oficinas { get; set; }
