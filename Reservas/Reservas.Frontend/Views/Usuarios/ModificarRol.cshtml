@@ -1,0 +1,58 @@
+﻿@model Reservas.Frontend.Models.UsuarioViewModel
+
+@{
+    ViewData["Title"] = "AprobarUsuario";
+    Layout = "~/Views/Shared/ModalLayout.cshtml";
+}
+
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header text-center">
+            <img src="/images/coworking.jpg" style="width: 100px; height: auto;" />
+            <h5>Mantenimiento </h5>
+        </div>
+        <div class="card-body text-success">
+            <form asp-action="ModificarRol" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Id" />                
+                <input type="hidden" asp-for="Contrasena" />
+                <input type="hidden" asp-for="PrimerNombre" />
+                <input type="hidden" asp-for="PrimerApellido" />
+                <input type="hidden" asp-for="SegundoNombre" />
+                <input type="hidden" asp-for="SegundoApellido" />
+
+                
+                <div class="form-group">
+                    <label>Nombre Completo:</label>
+                    <input asp-for="NombreCompleto" class="form-control" readonly />
+                    <span asp-validation-for="NombreCompleto" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label>Correo</label>
+                    <input asp-for="Email" class="form-control" readonly />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                                                            
+                <div class="form-group">
+                    <label>Rol</label>
+                    <select asp-for="RolId" asp-items="Model.Roles" class="form-control"></select>
+                    <span asp-validation-for="RolId" class="text-danger"></span>
+                </div>
+
+                <div class="card-footer text-center">
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-sm btn-success">
+                            <i class="oi oi-check"></i>
+                        </button>
+                        <a href="@Url.Action("Index", "Usuarios")" class="btn btn-sm btn-primary"><i class="oi oi-arrow-thick-left"></i></a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+

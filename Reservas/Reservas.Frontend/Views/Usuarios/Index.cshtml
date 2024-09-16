@@ -74,9 +74,9 @@
                                 <strong>@item.FechaRegistro.ToString("dd/MM/yyyy")</strong>
                             </td>
                             <td>
-                                <a onclick="showInPopup('@Url.Action("Details", "Usuarios", new { id = item.Id }, Context.Request.Scheme)' ,
+                                <a onclick="showInPopup('@Url.Action("ModificarRol", "Usuarios", new { id = item.UsuarioId }, Context.Request.Scheme)' ,
                     '')" class="btn btn-outline-warning btn-sm"><i class="oi oi-pencil"></i> </a>
-                                <button data-id="@item.Id" class="btn btn-outline-danger btn-sm deleteItem" data-bs-toggle="modal" data-bs-target="#deleteDialog">
+                                <button data-id="@item.UsuarioId" class="btn btn-outline-danger btn-sm deleteItem" data-bs-toggle="modal" data-bs-target="#deleteDialog">
                                     <i class="oi oi-trash"></i>
                                 </button>
                             </td>
